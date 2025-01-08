@@ -3,4 +3,6 @@ project(MoKoffe)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(MoKoffe main.cpp)
+add_executable(MoKoffe main.cpp
+        GestionareAngajati.h
+        GestionareAngajati.cpp)
