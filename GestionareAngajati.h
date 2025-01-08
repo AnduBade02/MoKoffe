@@ -60,6 +60,7 @@ public:
     void afiseazaAngajati() const;
     void citesteDinCSV(const string& numeFisier);
     void scrieInCSV(const string& numeFisier);
+    double calculeazaTotalSalarii() const;
 };
 
 #endif

@@ -132,5 +132,5 @@ void GestionareProduse::afiseazaProduse() const {
 
 void GestionareProduse::golesteProduse() {
     produse.clear();
-    profitZilnic = 0;
 }
+

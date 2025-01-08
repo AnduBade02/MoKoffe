@@ -3,3 +3,8 @@
 7	655	1736360493164948463	CMakeFiles/MoKoffe.dir/GestionareAngajati.cpp.o	d01be5f4277911
 656	786	1736362071208303545	MoKoffe	6779b131eb4afea3
 10	656	1736362070562143565	CMakeFiles/MoKoffe.dir/GestionareProduse.cpp.o	33083aca68ac6508
+10	596	1736370609872408866	CMakeFiles/MoKoffe.dir/main.cpp.o	ebbde4555179c7c2
+12	597	1736370609874626850	CMakeFiles/MoKoffe.dir/GestionareProduse.cpp.o	33083aca68ac6508
+12	604	1736370609874468101	CMakeFiles/MoKoffe.dir/GestionareAngajati.cpp.o	d01be5f4277911
+12	608	1736370609874750641	CMakeFiles/MoKoffe.dir/GestionareFinante.cpp.o	2dcb191348731629
+608	739	1736370610470196230	MoKoffe	9f2140d798429344

@@ -30,7 +30,6 @@ public:
 class GestionareProduse {
 private:
     vector<Produs> produse;
-    double profitZilnic = 0;
 
 public:
     void citesteDinCSV(const string& numeFisier);
@@ -38,6 +37,9 @@ public:
 
     void adaugaProdus(const Produs& produs, const string& numeFisier);
     void eliminaProdus(const string& nume, const string& numeFisier);
+    const std::vector<Produs>& getProduse() const {
+        return produse;
+    };
 
     void afiseazaProduse() const;
     void golesteProduse(); // Golește lista pentru schimbarea orașului

@@ -186,3 +186,13 @@ void GestionareAngajati::schimbaOras(const string& oras) {
         cout << "Orașul a fost schimbat în: " << oras << endl;
     }
 }
+
+double GestionareAngajati::calculeazaTotalSalarii() const {
+    double totalSalarii = 0;
+
+    for (const auto& angajat : angajati) {
+        totalSalarii += angajat->getSalariu();
+    }
+
+    return totalSalarii;
+}

@@ -1,16 +1,9 @@
 #include <iostream>
 #include "GestionareAngajati.h"
 #include "GestionareProduse.h"
+#include "GestionareFinante.h"
 
 using namespace std;
-
-void afiseazaMeniuCafenea() {
-    cout << "\nMeniu Cafenea\n";
-    cout << "1. Gestionare angajati\n";
-    cout << "2. Gestionare produse\n";
-    cout << "3. Iesire\n";
-    cout << "Alege o optiune: ";
-}
 
 void afiseazaMeniuGestionareAngajati() {
     cout << "\nMeniu Gestionare Angajati (Daca doriti sa modificati detaliile unui angajat existent, introduceti numele acestuia)\n";
@@ -30,10 +23,28 @@ void afiseazaMeniuGestionareProduse() {
     cout << "Alege o optiune: ";
 }
 
+void afiseazaMeniuCafenea() {
+    cout << "\nMeniu Cafenea\n";
+    cout << "1. Gestionare angajati\n";
+    cout << "2. Gestionare produse\n";
+    cout << "3. Gestionare finante\n";
+    cout << "4. Iesire\n";
+    cout << "Alege o optiune: ";
+}
+
+void afiseazaMeniuGestionareFinante() {
+    cout << "\nMeniu Gestionare Finante\n";
+    cout << "1. Genereaza raport financiar\n";
+    cout << "2. Afiseaza raport financiar\n";
+    cout << "3. Iesire\n";
+    cout << "Alege o optiune: ";
+}
+
 int main() {
     int optiuneCafenea;
     GestionareAngajati gestionareAngajati;
     GestionareProduse gestionareProduse;
+    GestionareFinante gestionareFinante;
 
     do {
         cout << "\nSelecteaza cafeneaua:\n";
@@ -42,14 +53,14 @@ int main() {
         cout << "3. Timisoara\n";
         cout << "4. Iasi\n";
         cout << "5. Brasov\n";
-        cout << "0. Iesire\n";  // Opțiune de ieșire
+        cout << "0. Iesire\n";
         cout << "Alege o optiune: ";
         cin >> optiuneCafenea;
-        cin.ignore();  // Curățăm buffer-ul
+        cin.ignore();
 
         if (optiuneCafenea == 0) {
             cout << "Iesire din program.\n";
-            break;  // Ieșim din bucla principală
+            break;
         }
 
         string locatie;
@@ -64,21 +75,26 @@ int main() {
                 continue;
         }
 
-        // Setăm orașul pentru ambele gestionări
+        // Setăm orașul pentru gestionare
         gestionareAngajati.schimbaOras(locatie);
         gestionareProduse.golesteProduse();
 
         string caleAngajati = "Orase/" + locatie + "/angajati.csv";
         string caleProduse = "Orase/" + locatie + "/produse.csv";
+        string caleComenzi = "Orase/" + locatie + "/comenzi.csv";
+        string caleEvenimente = "Orase/" + locatie + "/evenimente.csv";
+        string caleRaport = "Orase/" + locatie + "/raport.csv";
 
         gestionareAngajati.citesteDinCSV(caleAngajati);
         gestionareProduse.citesteDinCSV(caleProduse);
+        gestionareFinante.citesteComenziDinCSV(caleComenzi);
+        gestionareFinante.citesteEvenimenteDinCSV(caleEvenimente);
 
         int optiuneMeniu;
         do {
             afiseazaMeniuCafenea();
             cin >> optiuneMeniu;
-            cin.ignore(); // Curățăm buffer-ul
+            cin.ignore();
 
             switch (optiuneMeniu) {
                 case 1: {
@@ -182,14 +198,51 @@ int main() {
                     } while (optiuneProduse != 4);
                     break;
                 }
-                case 3:
+                case 3: {
+                    int optiuneFinante;
+                    do {
+                        afiseazaMeniuGestionareFinante();
+                        cin >> optiuneFinante;
+                        cin.ignore();
+
+                        switch (optiuneFinante) {
+                            case 1: {
+                                gestionareFinante.genereazaRaportCSV(caleRaport, gestionareProduse, gestionareAngajati);
+                                cout << "Raportul financiar a fost generat cu succes.\n";
+                                break;
+                            }
+                            case 2: {
+                                ifstream raport(caleRaport);
+                                if (!raport.is_open()) {
+                                    cout << "Raportul nu a fost generat inca.\n";
+                                } else {
+                                    string linie;
+                                    cout << "\nRaport Financiar:\n";
+                                    while (getline(raport, linie)) {
+                                        cout << linie << endl;
+                                    }
+                                    raport.close();
+                                }
+                                break;
+                            }
+                            case 3:
+                                cout << "Iesire din gestionarea finantelor.\n";
+                                break;
+                            default:
+                                cout << "Optiune invalida, incercati din nou.\n";
+                                break;
+                        }
+                    } while (optiuneFinante != 3);
+                    break;
+                }
+                case 4:
                     cout << "Iesire din meniul cafenelei.\n";
                     break;
                 default:
                     cout << "Optiune invalida, incercati din nou.\n";
                     break;
             }
-        } while (optiuneMeniu != 3);
+        } while (optiuneMeniu != 4);
     } while (optiuneCafenea != 0);
 
     return 0;
