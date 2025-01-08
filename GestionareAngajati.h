@@ -51,7 +51,7 @@ public:
 class GestionareAngajati {
 private:
     vector<unique_ptr<Angajat>> angajati;
-    string currentCity;  // Orașul curent
+    string currentCity;
 
 public:
     void schimbaOras(const string& oras);

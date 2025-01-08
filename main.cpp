@@ -1,12 +1,14 @@
 #include <iostream>
 #include "GestionareAngajati.h"
+#include "GestionareProduse.h"
 
 using namespace std;
 
 void afiseazaMeniuCafenea() {
     cout << "\nMeniu Cafenea\n";
     cout << "1. Gestionare angajati\n";
-    cout << "2. Iesire\n";
+    cout << "2. Gestionare produse\n";
+    cout << "3. Iesire\n";
     cout << "Alege o optiune: ";
 }
 
@@ -19,9 +21,19 @@ void afiseazaMeniuGestionareAngajati() {
     cout << "Alege o optiune: ";
 }
 
+void afiseazaMeniuGestionareProduse() {
+    cout << "\nMeniu Gestionare Produse\n";
+    cout << "1. Adauga produs\n";
+    cout << "2. Sterge produs\n";
+    cout << "3. Afiseaza produse\n";
+    cout << "4. Iesire\n";
+    cout << "Alege o optiune: ";
+}
+
 int main() {
     int optiuneCafenea;
-    GestionareAngajati gestionare;
+    GestionareAngajati gestionareAngajati;
+    GestionareProduse gestionareProduse;
 
     do {
         cout << "\nSelecteaza cafeneaua:\n";
@@ -30,9 +42,15 @@ int main() {
         cout << "3. Timisoara\n";
         cout << "4. Iasi\n";
         cout << "5. Brasov\n";
+        cout << "0. Iesire\n";  // Opțiune de ieșire
         cout << "Alege o optiune: ";
         cin >> optiuneCafenea;
         cin.ignore();  // Curățăm buffer-ul
+
+        if (optiuneCafenea == 0) {
+            cout << "Iesire din program.\n";
+            break;  // Ieșim din bucla principală
+        }
 
         string locatie;
         switch (optiuneCafenea) {
@@ -46,75 +64,133 @@ int main() {
                 continue;
         }
 
-        // Citim angajații din fișierul CSV corespunzător locației selectate
-        gestionare.schimbaOras(locatie);
+        // Setăm orașul pentru ambele gestionări
+        gestionareAngajati.schimbaOras(locatie);
+        gestionareProduse.golesteProduse();
 
-        string caleFisier = "Orase/" + locatie + "/angajati.csv";
-        gestionare.citesteDinCSV(caleFisier);
+        string caleAngajati = "Orase/" + locatie + "/angajati.csv";
+        string caleProduse = "Orase/" + locatie + "/produse.csv";
 
-        // Afișăm meniul de gestionare angajați pentru locația selectată
-        int optiuneAngajati;
+        gestionareAngajati.citesteDinCSV(caleAngajati);
+        gestionareProduse.citesteDinCSV(caleProduse);
+
+        int optiuneMeniu;
         do {
-            afiseazaMeniuGestionareAngajati();
-            cin >> optiuneAngajati;
+            afiseazaMeniuCafenea();
+            cin >> optiuneMeniu;
             cin.ignore(); // Curățăm buffer-ul
 
-            switch (optiuneAngajati) {
+            switch (optiuneMeniu) {
                 case 1: {
-                    // Adăugare angajat
-                    string nume, functie;
-                    int oraInceput, oraSfarsit;
-                    double salariu;
-                    cout << "Introduceti numele angajatului: ";
-                    getline(cin, nume);
-                    cout << "Introduceti functia (Barista, Manager, Ospatar): ";
-                    getline(cin, functie);
-                    cout << "Introduceti ora de inceput a turei: ";
-                    cin >> oraInceput;
-                    cout << "Introduceti ora de sfarsit a turei: ";
-                    cin >> oraSfarsit;
-                    cout << "Introduceti salariul zilnic al angajatului: ";
-                    cin >> salariu;
-                    cin.ignore(); // Curățăm buffer-ul
+                    int optiuneAngajati;
+                    do {
+                        afiseazaMeniuGestionareAngajati();
+                        cin >> optiuneAngajati;
+                        cin.ignore(); // Curățăm buffer-ul
 
-                    if (functie == "Barista") {
-                        gestionare.adaugaAngajat(make_unique<Barista>(nume, oraInceput, oraSfarsit, salariu),caleFisier);
-                    } else if (functie == "Manager") {
-                        gestionare.adaugaAngajat(make_unique<Manager>(nume, oraInceput, oraSfarsit, salariu),caleFisier);
-                    } else if (functie == "Ospatar") {
-                        gestionare.adaugaAngajat(make_unique<Ospatar>(nume, oraInceput, oraSfarsit, salariu),caleFisier);
-                    } else {
-                        cout << "Functie necunoscuta!\n";
-                    }
+                        switch (optiuneAngajati) {
+                            case 1: {
+                                string nume, functie;
+                                int oraInceput, oraSfarsit;
+                                double salariu;
+                                cout << "Introduceti numele angajatului: ";
+                                getline(cin, nume);
+                                cout << "Introduceti functia (Barista, Manager, Ospatar): ";
+                                getline(cin, functie);
+                                cout << "Introduceti ora de inceput a turei: ";
+                                cin >> oraInceput;
+                                cout << "Introduceti ora de sfarsit a turei: ";
+                                cin >> oraSfarsit;
+                                cout << "Introduceti salariul zilnic al angajatului: ";
+                                cin >> salariu;
+                                cin.ignore(); // Curățăm buffer-ul
 
-                    // Scriem modificările în fișierul CSV corespunzător locației
-                    gestionare.scrieInCSV(caleFisier);
+                                if (functie == "Barista") {
+                                    gestionareAngajati.adaugaAngajat(make_unique<Barista>(nume, oraInceput, oraSfarsit, salariu), caleAngajati);
+                                } else if (functie == "Manager") {
+                                    gestionareAngajati.adaugaAngajat(make_unique<Manager>(nume, oraInceput, oraSfarsit, salariu), caleAngajati);
+                                } else if (functie == "Ospatar") {
+                                    gestionareAngajati.adaugaAngajat(make_unique<Ospatar>(nume, oraInceput, oraSfarsit, salariu), caleAngajati);
+                                } else {
+                                    cout << "Functie necunoscuta!\n";
+                                }
+                                break;
+                            }
+                            case 2: {
+                                string nume;
+                                cout << "Introduceti numele angajatului de sters: ";
+                                getline(cin, nume);
+
+                                gestionareAngajati.stergeAngajat(nume, caleAngajati);
+                                break;
+                            }
+                            case 3:
+                                gestionareAngajati.afiseazaAngajati();
+                                break;
+                            case 4:
+                                cout << "Iesire din gestionarea angajatilor.\n";
+                                break;
+                            default:
+                                cout << "Optiune invalida, incercati din nou.\n";
+                                break;
+                        }
+                    } while (optiuneAngajati != 4);
                     break;
                 }
                 case 2: {
-                    // Ștergere angajat
-                    string nume;
-                    cout << "Introduceti numele angajatului de sters: ";
-                    getline(cin, nume);
+                    int optiuneProduse;
+                    do {
+                        afiseazaMeniuGestionareProduse();
+                        cin >> optiuneProduse;
+                        cin.ignore(); // Curățăm buffer-ul
 
-                    gestionare.stergeAngajat(nume,caleFisier); // Ștergere angajat din locația respectivă
-                    gestionare.scrieInCSV(caleFisier); // Scriem modificările în fișierul CSV corespunzător locației
+                        switch (optiuneProduse) {
+                            case 1: {
+                                string nume;
+                                int stoc;
+                                double costAchizitie, costVanzare;
+                                cout << "Introduceti numele produsului: ";
+                                getline(cin, nume);
+                                cout << "Introduceti stocul: ";
+                                cin >> stoc;
+                                cout << "Introduceti costul de achizitie: ";
+                                cin >> costAchizitie;
+                                cout << "Introduceti costul de vanzare: ";
+                                cin >> costVanzare;
+
+                                gestionareProduse.adaugaProdus(Produs(nume, stoc, costAchizitie, costVanzare), caleProduse);
+                                break;
+                            }
+                            case 2: {
+                                string nume;
+                                cout << "Introduceti numele produsului de sters: ";
+                                getline(cin, nume);
+
+                                gestionareProduse.eliminaProdus(nume, caleProduse);
+                                break;
+                            }
+                            case 3:
+                                gestionareProduse.afiseazaProduse();
+                                break;
+                            case 4:
+                                cout << "Iesire din gestionarea produselor.\n";
+                                break;
+                            default:
+                                cout << "Optiune invalida, incercati din nou.\n";
+                                break;
+                        }
+                    } while (optiuneProduse != 4);
                     break;
                 }
                 case 3:
-                    // Afișare angajați
-                    gestionare.afiseazaAngajati();
-                    break;
-                case 4:
-                    cout << "Iesire din gestionarea angajatilor.\n";
+                    cout << "Iesire din meniul cafenelei.\n";
                     break;
                 default:
                     cout << "Optiune invalida, incercati din nou.\n";
                     break;
             }
-        } while (optiuneAngajati != 4);
-
-    } while (optiuneCafenea != 0); // Sau orice altă opțiune de ieșire
+        } while (optiuneMeniu != 3);
+    } while (optiuneCafenea != 0);
 
     return 0;
 }

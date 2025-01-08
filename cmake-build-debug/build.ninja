@@ -61,6 +61,12 @@ build CMakeFiles/MoKoffe.dir/GestionareAngajati.cpp.o: CXX_COMPILER__MoKoffe_uns
   OBJECT_DIR = CMakeFiles/MoKoffe.dir
   OBJECT_FILE_DIR = CMakeFiles/MoKoffe.dir
 
+build CMakeFiles/MoKoffe.dir/GestionareProduse.cpp.o: CXX_COMPILER__MoKoffe_unscanned_Debug /Users/bade/Documents/Anul$ 2/POO/ProiectLab/MoKoffe/GestionareProduse.cpp || cmake_object_order_depends_target_MoKoffe
+  DEP_FILE = CMakeFiles/MoKoffe.dir/GestionareProduse.cpp.o.d
+  FLAGS = -g -std=gnu++17 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -mmacosx-version-min=15.1 -fcolor-diagnostics
+  OBJECT_DIR = CMakeFiles/MoKoffe.dir
+  OBJECT_FILE_DIR = CMakeFiles/MoKoffe.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target MoKoffe
@@ -69,7 +75,7 @@ build CMakeFiles/MoKoffe.dir/GestionareAngajati.cpp.o: CXX_COMPILER__MoKoffe_uns
 #############################################
 # Link the executable MoKoffe
 
-build MoKoffe: CXX_EXECUTABLE_LINKER__MoKoffe_Debug CMakeFiles/MoKoffe.dir/main.cpp.o CMakeFiles/MoKoffe.dir/GestionareAngajati.cpp.o
+build MoKoffe: CXX_EXECUTABLE_LINKER__MoKoffe_Debug CMakeFiles/MoKoffe.dir/main.cpp.o CMakeFiles/MoKoffe.dir/GestionareAngajati.cpp.o CMakeFiles/MoKoffe.dir/GestionareProduse.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.2.sdk -mmacosx-version-min=15.1
   OBJECT_DIR = CMakeFiles/MoKoffe.dir
   POST_BUILD = :
