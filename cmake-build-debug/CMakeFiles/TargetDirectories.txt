@@ -1,0 +1,3 @@
+/Users/bade/Documents/Anul 2/POO/ProiectLab/MoKoffe/cmake-build-debug/CMakeFiles/MoKoffe.dir
+/Users/bade/Documents/Anul 2/POO/ProiectLab/MoKoffe/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/bade/Documents/Anul 2/POO/ProiectLab/MoKoffe/cmake-build-debug/CMakeFiles/rebuild_cache.dir
