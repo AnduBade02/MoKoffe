@@ -1,5 +1,4 @@
 #include <iostream>
-#include <map>
 #include "GestionareAngajati.h"
 
 using namespace std;
@@ -21,11 +20,9 @@ void afiseazaMeniuGestionareAngajati() {
 }
 
 int main() {
-    // Citire angajați din fișierul CSV global
-    GestionareAngajati gestionare;
-    gestionare.citesteDinCSV("angajati.csv");
-
     int optiuneCafenea;
+    GestionareAngajati gestionare;
+
     do {
         cout << "\nSelecteaza cafeneaua:\n";
         cout << "1. Bucuresti\n";
@@ -48,6 +45,12 @@ int main() {
                 cout << "Optiune invalida!\n";
                 continue;
         }
+
+        // Citim angajații din fișierul CSV corespunzător locației selectate
+        gestionare.schimbaOras(locatie);
+
+        string caleFisier = "Orase/" + locatie + "/angajati.csv";
+        gestionare.citesteDinCSV(caleFisier);
 
         // Afișăm meniul de gestionare angajați pentru locația selectată
         int optiuneAngajati;
@@ -75,16 +78,17 @@ int main() {
                     cin.ignore(); // Curățăm buffer-ul
 
                     if (functie == "Barista") {
-                        gestionare.adaugaAngajat(make_unique<Barista>(nume, oraInceput, oraSfarsit, salariu, locatie));
+                        gestionare.adaugaAngajat(make_unique<Barista>(nume, oraInceput, oraSfarsit, salariu),caleFisier);
                     } else if (functie == "Manager") {
-                        gestionare.adaugaAngajat(make_unique<Manager>(nume, oraInceput, oraSfarsit, salariu, locatie));
+                        gestionare.adaugaAngajat(make_unique<Manager>(nume, oraInceput, oraSfarsit, salariu),caleFisier);
                     } else if (functie == "Ospatar") {
-                        gestionare.adaugaAngajat(make_unique<Ospatar>(nume, oraInceput, oraSfarsit, salariu, locatie));
+                        gestionare.adaugaAngajat(make_unique<Ospatar>(nume, oraInceput, oraSfarsit, salariu),caleFisier);
                     } else {
                         cout << "Functie necunoscuta!\n";
                     }
 
-                    gestionare.scrieInCSV("angajati.csv"); // Scriem modificările în fișierul CSV global
+                    // Scriem modificările în fișierul CSV corespunzător locației
+                    gestionare.scrieInCSV(caleFisier);
                     break;
                 }
                 case 2: {
@@ -93,13 +97,13 @@ int main() {
                     cout << "Introduceti numele angajatului de sters: ";
                     getline(cin, nume);
 
-                    gestionare.stergeAngajat(nume); // Ștergere angajat din locația respectivă
-                    gestionare.scrieInCSV("angajati.csv"); // Scriem modificările în fișierul CSV global
+                    gestionare.stergeAngajat(nume,caleFisier); // Ștergere angajat din locația respectivă
+                    gestionare.scrieInCSV(caleFisier); // Scriem modificările în fișierul CSV corespunzător locației
                     break;
                 }
                 case 3:
                     // Afișare angajați
-                    gestionare.afiseazaAngajati(locatie);
+                    gestionare.afiseazaAngajati();
                     break;
                 case 4:
                     cout << "Iesire din gestionarea angajatilor.\n";

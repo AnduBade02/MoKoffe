@@ -15,10 +15,9 @@ protected:
     int oraInceput;
     int oraSfarsit;
     double salariu;
-    string oras;
 
 public:
-    Angajat(const string& nume, const string& functie, int oraInceput, int oraSfarsit, double salariu, const string& oras);
+    Angajat(const string& nume, const string& functie, int oraInceput, int oraSfarsit, double salariu);
     virtual ~Angajat() = default;
 
     virtual void afiseazaDetalii() const;
@@ -27,40 +26,40 @@ public:
     string getFunctie() const;
     int getOraInceput() const;
     int getOraSfarsit() const;
-    string getOras() const;
 };
 
 // Clase derivate
 class Barista : public Angajat {
 public:
-    Barista(const string& nume, int oraInceput, int oraSfarsit, double salariu, const string& oras);
+    Barista(const string& nume, int oraInceput, int oraSfarsit, double salariu);
     void afiseazaDetalii() const override;
 };
 
 class Manager : public Angajat {
 public:
-    Manager(const string& nume, int oraInceput, int oraSfarsit, double salariu, const string& oras);
+    Manager(const string& nume, int oraInceput, int oraSfarsit, double salariu);
     void afiseazaDetalii() const override;
 };
 
 class Ospatar : public Angajat {
 public:
-    Ospatar(const string& nume, int oraInceput, int oraSfarsit, double salariu, const string& oras);
+    Ospatar(const string& nume, int oraInceput, int oraSfarsit, double salariu);
     void afiseazaDetalii() const override;
 };
 
 // Gestionare Angajați
 class GestionareAngajati {
 private:
-    std::vector<std::unique_ptr<Angajat>> angajati;
+    vector<unique_ptr<Angajat>> angajati;
+    string currentCity;  // Orașul curent
 
 public:
-    void adaugaAngajat(unique_ptr<Angajat> angajat);
-    void stergeAngajat(const string& nume);
-    void afiseazaAngajati(const string& orasSelectat) const;
+    void schimbaOras(const string& oras);
+    void adaugaAngajat(unique_ptr<Angajat> angajat, const string& numeFisier);
+    void stergeAngajat(const string& nume, const string& numeFisier);
+    void afiseazaAngajati() const;
     void citesteDinCSV(const string& numeFisier);
     void scrieInCSV(const string& numeFisier);
-    void afiseazaAngajatiDinOras(const string& oras) const; // Afișare angajați dintr-un anumit oraș
 };
 
 #endif

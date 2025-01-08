@@ -6,13 +6,13 @@
 using namespace std;
 
 // Implementare clasa Angajat
-Angajat::Angajat(const string& nume, const string& functie, int oraInceput, int oraSfarsit, double salariu, const string& oras)
-        : nume(nume), functie(functie), oraInceput(oraInceput), oraSfarsit(oraSfarsit), salariu(salariu), oras(oras) {}
+Angajat::Angajat(const string& nume, const string& functie, int oraInceput, int oraSfarsit, double salariu)
+        : nume(nume), functie(functie), oraInceput(oraInceput), oraSfarsit(oraSfarsit), salariu(salariu) {}
 
 void Angajat::afiseazaDetalii() const {
     cout << "Nume: " << nume << ", Functie: " << functie
          << ", Tura: " << oraInceput << " - " << oraSfarsit
-         << ", Salariu: " << salariu << ", Oras: " << oras << endl;
+         << ", Salariu: " << salariu << endl;
 }
 
 double Angajat::getSalariu() const {
@@ -35,29 +35,26 @@ int Angajat::getOraSfarsit() const {
     return oraSfarsit;
 }
 
-string Angajat::getOras() const {
-    return oras;
-}
 
 // Implementare clase derivate
-Barista::Barista(const string& nume, int oraInceput, int oraSfarsit, double salariu, const string& oras)
-        : Angajat(nume, "Barista", oraInceput, oraSfarsit, salariu, oras) {}
+Barista::Barista(const string& nume, int oraInceput, int oraSfarsit, double salariu)
+        : Angajat(nume, "Barista", oraInceput, oraSfarsit, salariu) {}
 
 void Barista::afiseazaDetalii() const {
     cout << "[Barista] ";
     Angajat::afiseazaDetalii();
 }
 
-Manager::Manager(const string& nume, int oraInceput, int oraSfarsit, double salariu, const string& oras)
-        : Angajat(nume, "Manager", oraInceput, oraSfarsit, salariu, oras) {}
+Manager::Manager(const string& nume, int oraInceput, int oraSfarsit, double salariu)
+        : Angajat(nume, "Manager", oraInceput, oraSfarsit, salariu) {}
 
 void Manager::afiseazaDetalii() const {
     cout << "[Manager] ";
     Angajat::afiseazaDetalii();
 }
 
-Ospatar::Ospatar(const string& nume, int oraInceput, int oraSfarsit, double salariu, const string& oras)
-        : Angajat(nume, "Ospatar", oraInceput, oraSfarsit, salariu, oras) {}
+Ospatar::Ospatar(const string& nume, int oraInceput, int oraSfarsit, double salariu)
+        : Angajat(nume, "Ospatar", oraInceput, oraSfarsit, salariu) {}
 
 void Ospatar::afiseazaDetalii() const {
     cout << "[Ospătar] ";
@@ -65,12 +62,12 @@ void Ospatar::afiseazaDetalii() const {
 }
 
 // Implementare GestionareAngajati
-void GestionareAngajati::adaugaAngajat(std::unique_ptr<Angajat> angajat) {
+void GestionareAngajati::adaugaAngajat(std::unique_ptr<Angajat> angajat, const string& numeFisier) {
     angajati.push_back(move(angajat));
-    scrieInCSV("angajati.csv"); // Actualizează fișierul CSV după adăugare
+    scrieInCSV(numeFisier); // Actualizează fișierul CSV după adăugare
 }
 
-void GestionareAngajati::stergeAngajat(const string& nume) {
+void GestionareAngajati::stergeAngajat(const string& nume, const string& numeFisier) {
     auto it = remove_if(angajati.begin(), angajati.end(),
                         [&nume](const std::unique_ptr<Angajat>& angajat) {
                             return angajat->getNume() == nume;
@@ -79,18 +76,16 @@ void GestionareAngajati::stergeAngajat(const string& nume) {
     if (it != angajati.end()) {
         angajati.erase(it, angajati.end());
         cout << "Angajatul \"" << nume << "\" a fost șters.\n";
-        scrieInCSV("angajati.csv"); // Actualizează fișierul CSV după ștergere
+        scrieInCSV(numeFisier); // Actualizează fișierul CSV după ștergere
     } else {
         cout << "Angajatul \"" << nume << "\" nu a fost găsit.\n";
     }
 }
 
-void GestionareAngajati::afiseazaAngajati(const string& orasSelectat) const {
-    cout << "Lista angajaților din orasul " << orasSelectat << ":\n";
+void GestionareAngajati::afiseazaAngajati() const {
+    cout << "Lista angajaților din orasul " << currentCity << ":\n";
     for (const auto& angajat : angajati) {
-        if (angajat->getOras() == orasSelectat) {
-            angajat->afiseazaDetalii();
-        }
+        angajat->afiseazaDetalii();
     }
 }
 
@@ -122,12 +117,15 @@ void GestionareAngajati::citesteDinCSV(const string& numeFisier) {
         // Citim orașul
         getline(stream, oras); // Orașul ar trebui să fie ultima coloană
 
+        // Verificăm și schimbăm orașul
+        schimbaOras(oras);
+
         if (functie == "Barista") {
-            adaugaAngajat(make_unique<Barista>(nume, oraInceput, oraSfarsit, salariu, oras));
+            adaugaAngajat(make_unique<Barista>(nume, oraInceput, oraSfarsit, salariu), numeFisier);
         } else if (functie == "Manager") {
-            adaugaAngajat(make_unique<Manager>(nume, oraInceput, oraSfarsit, salariu, oras));
+            adaugaAngajat(make_unique<Manager>(nume, oraInceput, oraSfarsit, salariu), numeFisier);
         } else if (functie == "Ospatar") {
-            adaugaAngajat(make_unique<Ospatar>(nume, oraInceput, oraSfarsit, salariu, oras));
+            adaugaAngajat(make_unique<Ospatar>(nume, oraInceput, oraSfarsit, salariu), numeFisier);
         } else {
             cerr << "Funcție necunoscută pentru angajatul " << nume << endl;
         }
@@ -145,17 +143,24 @@ void GestionareAngajati::scrieInCSV(const string& numeFisier) {
         return;
     }
 
-    fisier << "Nume,Functie,OraInceput,OraSfarsit,Salariu,Oras\n"; // Header-ul fișierului CSV
+    fisier << "Nume,Functie,OraInceput,OraSfarsit,Salariu\n"; // Header-ul fișierului CSV
 
     for (const auto& angajat : angajati) {
         fisier << angajat->getNume() << ","
                << angajat->getFunctie() << ","
                << angajat->getOraInceput() << ","
                << angajat->getOraSfarsit() << ","
-               << angajat->getSalariu() << ","
-               << angajat->getOras() << "\n";
+               << angajat->getSalariu() << "\n";
     }
 
     fisier.close();
     cout << "Fișierul CSV a fost actualizat.\n";
+}
+
+void GestionareAngajati::schimbaOras(const string& oras) {
+    if (oras != currentCity) {
+        currentCity = oras;
+        angajati.clear(); // Golește lista de angajați
+        cout << "Orașul a fost schimbat în: " << oras << endl;
+    }
 }
