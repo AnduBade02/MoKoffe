@@ -13,8 +13,8 @@ void afiseazaMeniuCafenea() {
 }
 
 void afiseazaMeniuGestionareAngajati() {
-    cout << "\nMeniu Gestionare Angajati\n";
-    cout << "1. Adauga angajat\n";
+    cout << "\nMeniu Gestionare Angajati (Daca doriti sa modificati detaliile unui angajat existent, introduceti numele acestuia)\n";
+    cout << "1. Adauga/Modifica angajat\n";
     cout << "2. Sterge angajat\n";
     cout << "3. Afiseaza angajati\n";
     cout << "4. Iesire\n";
@@ -23,7 +23,7 @@ void afiseazaMeniuGestionareAngajati() {
 
 void afiseazaMeniuGestionareProduse() {
     cout << "\nMeniu Gestionare Produse\n";
-    cout << "1. Adauga produs\n";
+    cout << "1. Adauga/Modifica produs (Daca doriti sa modificati detaliile unui produs existent, introduceti numele acestuia)\n";
     cout << "2. Sterge produs\n";
     cout << "3. Afiseaza produse\n";
     cout << "4. Iesire\n";

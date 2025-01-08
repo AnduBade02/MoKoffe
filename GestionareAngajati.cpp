@@ -63,8 +63,30 @@ void Ospatar::afiseazaDetalii() const {
 
 // Implementare GestionareAngajati
 void GestionareAngajati::adaugaAngajat(std::unique_ptr<Angajat> angajat, const string& numeFisier) {
-    angajati.push_back(move(angajat));
-    scrieInCSV(numeFisier); // Actualizează fișierul CSV după adăugare
+    // Verificăm dacă angajatul există deja (pe baza numelui)
+    bool angajatExistent = false;
+    for (const auto& a : angajati) {
+        if (a->getNume() == angajat->getNume()) {
+            angajatExistent = true;
+            break;
+        }
+    }
+
+    // Dacă angajatul nu există, adăugăm angajatul nou și actualizăm fișierul
+    if (!angajatExistent) {
+        angajati.push_back(move(angajat));
+    } else {
+        // Dacă angajatul există, îl înlocuim cu cel nou
+        for (auto& a : angajati) {
+            if (a->getNume() == angajat->getNume()) {
+                a = move(angajat); // Înlocuim angajatul existent cu cel nou
+                break;
+            }
+        }
+    }
+
+    // Scriem din nou toți angajații în fișierul CSV
+    scrieInCSV(numeFisier);
 }
 
 void GestionareAngajati::stergeAngajat(const string& nume, const string& numeFisier) {

@@ -7,4 +7,6 @@ add_executable(MoKoffe main.cpp
         GestionareAngajati.h
         GestionareAngajati.cpp
         GestionareProduse.h
-        GestionareProduse.cpp)
+        GestionareProduse.cpp
+        GestionareFinante.h
+        GestionareFinante.cpp)

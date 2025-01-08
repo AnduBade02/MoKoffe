@@ -83,7 +83,29 @@ void GestionareProduse::scrieInCSV(const string& numeFisier) const {
 }
 
 void GestionareProduse::adaugaProdus(const Produs& produs, const string& numeFisier) {
-    produse.push_back(produs);
+    // Verificăm dacă produsul există deja
+    bool produsExistente = false;
+    for (const auto& p : produse) {
+        if (p.getNume() == produs.getNume()) {
+            produsExistente = true;
+            break;
+        }
+    }
+
+    // Dacă produsul nu există, adăugăm produsul nou și actualizăm fișierul
+    if (!produsExistente) {
+        produse.push_back(produs);
+    } else {
+        // Dacă produsul există, îl înlocuim cu produsul introdus
+        for (auto& p : produse) {
+            if (p.getNume() == produs.getNume()) {
+                p = produs; // Înlocuim produsul existent cu cel nou
+                break;
+            }
+        }
+    }
+
+    // Scriem din nou toate produsele în fișierul CSV
     scrieInCSV(numeFisier);
 }
 
