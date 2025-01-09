@@ -3,8 +3,18 @@
 #include "GestionareProduse.h"
 #include "GestionareFinante.h"
 #include "GestionareCSV.h"
+#include "GestionareEvenimente.h"
 
 using namespace std;
+
+void afiseazaMeniuGestionareEvenimente() {
+    cout << "\nMeniu Gestionare Evenimente\n";
+    cout << "1. Adauga/Modifica eveniment\n";
+    cout << "2. Sterge eveniment\n";
+    cout << "3. Afiseaza evenimente\n";
+    cout << "4. Iesire\n";
+    cout << "Alege o optiune: ";
+}
 
 void afiseazaMeniuGestionareAngajati() {
     cout << "\nMeniu Gestionare Angajati (Daca doriti sa modificati detaliile unui angajat existent, introduceti numele acestuia)\n";
@@ -29,7 +39,8 @@ void afiseazaMeniuCafenea() {
     cout << "1. Gestionare angajati\n";
     cout << "2. Gestionare produse\n";
     cout << "3. Gestionare finante\n";
-    cout << "4. Iesire\n";
+    cout << "4. Gestionare evenimente\n"; // Modificat pentru a reflecta opțiunea corectă
+    cout << "5. Iesire\n"; // Schimbă numerotarea dacă necesită ajustare
     cout << "Alege o optiune: ";
 }
 
@@ -47,6 +58,7 @@ int main() {
         GestionareAngajati gestionareAngajati;
         GestionareProduse gestionareProduse;
         GestionareFinante gestionareFinante;
+        GestionareEvenimente gestionareEvenimente;
 
         int optiuneLimba;
         string limba;
@@ -113,6 +125,7 @@ int main() {
             // Setăm orașul pentru gestionare
             gestionareAngajati.schimbaOras(locatie);
             gestionareProduse.golesteProduse();
+            gestionareEvenimente.golesteEvenimente();
 
             string caleAngajati = "Orase/" + locatie + "/angajati.csv";
             string caleProduse = "Orase/" + locatie + "/produse.csv";
@@ -124,6 +137,7 @@ int main() {
             gestionareProduse.citesteDinCSV(caleProduse);
             gestionareFinante.citesteComenziDinCSV(caleComenzi);
             gestionareFinante.citesteEvenimenteDinCSV(caleEvenimente);
+            gestionareEvenimente.citesteDinCSV(caleEvenimente);
 
             int optiuneMeniu;
             do {
@@ -267,14 +281,56 @@ int main() {
                         } while (optiuneFinante != 3);
                         break;
                     }
-                    case 4:
+                    case 4: {
+                        // Meniu pentru gestionarea evenimentelor
+                        int optiuneEvenimente;
+                        do {
+                            afiseazaMeniuGestionareEvenimente();
+                            cin >> optiuneEvenimente;
+                            cin.ignore(); // Curățăm buffer-ul
+
+                            switch (optiuneEvenimente) {
+                                case 1: {
+                                    string numeEveniment;
+                                    double pretEveniment;
+                                    cout << "Introduceti numele evenimentului: ";
+                                    getline(cin, numeEveniment);
+                                    cout << "Introduceti pretul evenimentului: ";
+                                    cin >> pretEveniment;
+                                    cin.ignore(); // Curățăm buffer-ul
+
+                                    gestionareEvenimente.adaugaEvent(Event(numeEveniment,pretEveniment), caleEvenimente);
+                                    break;
+                                }
+                                case 2: {
+                                    string numeEveniment;
+                                    cout << "Introduceti numele evenimentului de sters: ";
+                                    getline(cin, numeEveniment);
+
+                                    gestionareEvenimente.eliminaEvent(numeEveniment, caleEvenimente);
+                                    break;
+                                }
+                                case 3:
+                                    gestionareEvenimente.afiseazaEvenimente();
+                                    break;
+                                case 4:
+                                    cout << "Iesire din gestionarea evenimentelor.\n";
+                                    break;
+                                default:
+                                    cout << "Optiune invalida, incercati din nou.\n";
+                                    break;
+                            }
+                        } while (optiuneEvenimente != 4);
+                        break;
+                    }
+                    case 5:
                         cout << "Iesire din meniul cafenelei.\n";
                         break;
                     default:
                         cout << "Optiune invalida, incercati din nou.\n";
                         break;
                 }
-            } while (optiuneMeniu != 4);
+            } while (optiuneMeniu != 5);
         } while (optiuneCafenea != 0);
     } catch (const runtime_error& e) {
         cerr << "Eroare: " << e.what() << endl;
