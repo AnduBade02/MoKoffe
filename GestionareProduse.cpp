@@ -22,10 +22,6 @@ double Produs::getCostVanzare() const {
     return costVanzare;
 }
 
-void Produs::setStoc(int nouStoc) {
-    stoc = nouStoc;
-}
-
 void Produs::afiseazaDetalii() const {
     cout << "Produs: " << nume << ", Stoc: " << stoc
          << ", Cost Achizitie: " << costAchizitie

@@ -23,7 +23,6 @@ public:
     double getCostAchizitie() const;
     double getCostVanzare() const;
 
-    void setStoc(int nouStoc);
     void afiseazaDetalii() const;
 };
 
