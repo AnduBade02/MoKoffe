@@ -122,14 +122,11 @@ int main() {
                                     cin >> salariu;
                                     cin.ignore(); // Curățăm buffer-ul
 
-                                    if (functie == "Barista") {
-                                        gestionareAngajati.adaugaAngajat(make_unique<Barista>(nume, oraInceput, oraSfarsit, salariu), caleAngajati);
-                                    } else if (functie == "Manager") {
-                                        gestionareAngajati.adaugaAngajat(make_unique<Manager>(nume, oraInceput, oraSfarsit, salariu), caleAngajati);
-                                    } else if (functie == "Ospatar") {
-                                        gestionareAngajati.adaugaAngajat(make_unique<Ospatar>(nume, oraInceput, oraSfarsit, salariu), caleAngajati);
-                                    } else {
-                                        cout << "Functie necunoscuta!\n";
+                                    try {
+                                        auto angajat = GestionareAngajati::creeazaAngajat(functie, nume, oraInceput, oraSfarsit, salariu);
+                                        gestionareAngajati.adaugaAngajat(move(angajat), caleAngajati);
+                                    } catch (const invalid_argument& e) {
+                                        cout << "Eroare: " << e.what() << endl;
                                     }
                                     break;
                                 }

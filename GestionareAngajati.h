@@ -54,6 +54,25 @@ private:
     string currentCity;
 
 public:
+    // Factory Method
+    static unique_ptr<Angajat> creeazaAngajat(
+            const string& tip,
+            const string& nume,
+            int oraInceput,
+            int oraSfarsit,
+            double salariu
+    ) {
+        if (tip == "Barista") {
+            return make_unique<Barista>(nume, oraInceput, oraSfarsit, salariu);
+        } else if (tip == "Manager") {
+            return make_unique<Manager>(nume, oraInceput, oraSfarsit, salariu);
+        } else if (tip == "Ospatar") {
+            return make_unique<Ospatar>(nume, oraInceput, oraSfarsit, salariu);
+        } else {
+            throw invalid_argument("Tipul de angajat nu este valid: " + tip);
+        }
+    }
+
     void schimbaOras(const string& oras);
     void adaugaAngajat(unique_ptr<Angajat> angajat, const string& numeFisier);
     void stergeAngajat(const string& nume, const string& numeFisier);
