@@ -36,8 +36,7 @@ void Produs::afiseazaDetalii() const {
 void GestionareProduse::citesteDinCSV(const string& numeFisier) {
     ifstream fisier(numeFisier);
     if (!fisier.is_open()) {
-        cerr << "Nu s-a putut deschide fișierul " << numeFisier << endl;
-        return;
+        throw runtime_error("Nu s-a putut deschide fisierul produse: " + numeFisier);
     }
 
     string linie, nume;
@@ -120,7 +119,7 @@ void GestionareProduse::eliminaProdus(const string& nume, const string& numeFisi
         scrieInCSV(numeFisier);
         cout << "Produsul \"" << nume << "\" a fost șters.\n";
     } else {
-        cout << "Produsul \"" << nume << "\" nu a fost găsit.\n";
+        throw invalid_argument("Produsul cu numele " + nume + " nu a fost gasit.");
     }
 }
 

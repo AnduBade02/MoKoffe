@@ -100,7 +100,7 @@ void GestionareAngajati::stergeAngajat(const string& nume, const string& numeFis
         cout << "Angajatul \"" << nume << "\" a fost șters.\n";
         scrieInCSV(numeFisier); // Actualizează fișierul CSV după ștergere
     } else {
-        cout << "Angajatul \"" << nume << "\" nu a fost găsit.\n";
+        throw invalid_argument("Angajatul cu numele " + nume + " nu a fost gasit.");
     }
 }
 
@@ -114,8 +114,7 @@ void GestionareAngajati::afiseazaAngajati() const {
 void GestionareAngajati::citesteDinCSV(const string& numeFisier) {
     ifstream fisier(numeFisier);
     if (!fisier.is_open()) {
-        cerr << "Nu s-a putut deschide fișierul " << numeFisier << endl;
-        return;
+        throw runtime_error("Nu s-a putut deschide fisierul angajati: " + numeFisier);
     }
 
     string linie, nume, functie, oras;

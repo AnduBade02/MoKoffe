@@ -1,10 +1,19 @@
 #include "GestionareFinante.h"
 
+string obtineDataSiOraCurenta() {
+    std::time_t timpCurent = std::time(nullptr);
+    std::tm* timpLocal = std::localtime(&timpCurent);
+
+    std::ostringstream buffer;
+    buffer << std::put_time(timpLocal, "%Y-%m-%d %H:%M:%S");
+    return buffer.str();
+}
+
+
 void GestionareFinante::citesteComenziDinCSV(const std::string& numeFisier) {
     std::ifstream fisier(numeFisier);
     if (!fisier.is_open()) {
-        std::cerr << "Nu s-a putut deschide fișierul " << numeFisier << std::endl;
-        return;
+        throw runtime_error("Nu s-a putut deschide fisierul comenzi: " + numeFisier);
     }
 
     std::string linie;
@@ -82,8 +91,7 @@ double GestionareFinante::aplicaReducere(double pretTotal, bool fidelitate) cons
 void GestionareFinante::citesteEvenimenteDinCSV(const string& numeFisier) {
     ifstream fisier(numeFisier);
     if (!fisier.is_open()) {
-        cerr << "Nu s-a putut deschide fișierul " << numeFisier << endl;
-        return;
+        throw runtime_error("Nu s-a putut deschide fisierul evenimente: " + numeFisier);
     }
 
     string linie, tipEveniment;
@@ -114,10 +122,27 @@ void GestionareFinante::afiseazaEvenimente() const {
 // Calculul costului total al evenimentelor
 double GestionareFinante::calculeazaCostEvenimente() const {
     double costTotal = 0;
+    int cnt = 0;
+
     for (const auto& eveniment : evenimente) {
         costTotal += eveniment.pret;
+        cnt++;
     }
-    return costTotal/100;
+
+    // Inițializare generator de numere aleatoare (o singură dată în program)
+    static bool initializat = false;
+    if (!initializat) {
+        srand(static_cast<unsigned>(time(0)));
+        initializat = true;
+    }
+
+    // Determinăm dacă returnăm costul mediu sau 0
+    int sansa = rand() % 7; // Valoare între 0 și 6 (1/7 șansă să fie 0)
+    if (sansa == 0 && cnt > 0) {
+        return costTotal / cnt;
+    } else {
+        return 0.0;
+    }
 }
 
 double GestionareFinante::calculeazaVenituriTotale(const GestionareProduse& gestionareProduse) const {
@@ -145,25 +170,26 @@ double GestionareFinante::calculeazaCostProduse(const GestionareProduse& gestion
 }
 
 void GestionareFinante::genereazaRaportCSV(const string& numeFisier, const GestionareProduse& gestionareProduse, const GestionareAngajati& gestionareAngajati) const {
-    ofstream fisier(numeFisier);
+    // Deschidem fișierul în modul append (pentru a adăuga noi linii)
+    ofstream fisier(numeFisier, ios::app);
     if (!fisier.is_open()) {
         cerr << "Nu s-a putut deschide fișierul " << numeFisier << endl;
         return;
     }
 
-    // Scriere header
-    fisier << "venituri,costuri,salarii,profit\n";
     double salarii = gestionareAngajati.calculeazaTotalSalarii();
-    // Calculăm valorile relevante
     double venituriTotale = calculeazaVenituriTotale(gestionareProduse);
     double costProduse = calculeazaCostProduse(gestionareProduse);
     double costEvenimente = calculeazaCostEvenimente();
     double costuriTotale = costProduse + costEvenimente + salarii;
     double profit = venituriTotale - costuriTotale;
 
-    // Scrierea valorilor în fișier
-    fisier << venituriTotale << "," << costuriTotale << "," << salarii << "," << profit << "\n";
+    // Obținem data și ora curente
+    string dataOraCurenta = obtineDataSiOraCurenta();
+
+    // Scriem o nouă linie în fișier
+    fisier << venituriTotale << "," << costuriTotale << "," << salarii << "," << profit << "," << dataOraCurenta << "\n";
 
     fisier.close();
-    cout << "Raportul a fost generat în fișierul " << numeFisier << endl;
+    cout << "Raportul a fost generat și adăugat în fișierul " << numeFisier << endl;
 }

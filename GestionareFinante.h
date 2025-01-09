@@ -1,11 +1,13 @@
 #ifndef GESTIONAREFINANTE_H
 #define GESTIONAREFINANTE_H
 
+#include <cstdlib>
 #include <vector>
 #include <string>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <ctime>
 #include "GestionareProduse.h"  // Importăm GestionareProduse pentru a accesa produsele
 #include "GestionareAngajati.h"
 
