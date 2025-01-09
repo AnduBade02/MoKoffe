@@ -9,4 +9,6 @@ add_executable(MoKoffe main.cpp
         GestionareProduse.h
         GestionareProduse.cpp
         GestionareFinante.h
-        GestionareFinante.cpp)
+        GestionareFinante.cpp
+        GestionareCSV.h
+        GestionareCSV.cpp)

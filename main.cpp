@@ -2,6 +2,7 @@
 #include "GestionareAngajati.h"
 #include "GestionareProduse.h"
 #include "GestionareFinante.h"
+#include "GestionareCSV.h"
 
 using namespace std;
 
@@ -46,6 +47,39 @@ int main() {
         GestionareAngajati gestionareAngajati;
         GestionareProduse gestionareProduse;
         GestionareFinante gestionareFinante;
+
+        int optiuneLimba;
+        string limba;
+
+        // Alegerea limbii
+        cout << "Selecteaza limba:\n";
+        cout << "1. Romana\n";
+        cout << "2. Engleza\n";
+        cout << "Alege o optiune: ";
+        cin >> optiuneLimba;
+        cin.ignore();
+
+        if (optiuneLimba == 1) {
+            limba = "ro";
+        } else if (optiuneLimba == 2) {
+            limba = "en";
+        } else {
+            throw invalid_argument("Optiune invalida pentru limba.");
+        }
+
+        // Cream obiectul pentru gestionarea CSV
+        GestionareCSV gestionareCSV(limba);
+
+        // Lista oraselor
+        vector<string> orase = {"Bucuresti", "Cluj", "Timisoara", "Iasi", "Brasov"};
+
+        // Schimbam header-ele pentru toate fisierele din toate orasele
+        gestionareCSV.schimbaToateHeaderelePentruOrase(orase);
+        if (optiuneLimba == 1) {
+            cout << "Toate fisierele CSV au fost actualizate.\n";
+        } else if (optiuneLimba == 2) {
+            cout << "All CSV files have been updated.\n";
+        }
 
         do {
             cout << "\nSelecteaza cafeneaua:\n";
