@@ -1,7 +1,8 @@
 produse,stoc,costAchizitie,costVanzare
 Cafea Espresso,90,2,5
-Cafea Latte,40,3,15
+Cafea Latte,80,3,15
 Desert Brownie,20,4,15
 Bagheta Crispy,25,3.5,10.5
 Ciocolata Calda,15,2.5,19
-Cafea Americano,90,1,7
+Americano,29,3,6
+Cappucino,50,3,9
