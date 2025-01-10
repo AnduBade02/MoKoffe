@@ -1,4 +1,4 @@
-produse,stoc,costAchizitie,costVanzare
+products,stock,purchaseCost,saleCost
 Cafea Espresso,60,2,5
 Cafea Latte,45,3,7
 Desert Brownie,25,4,8
