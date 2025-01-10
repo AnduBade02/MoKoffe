@@ -7,63 +7,65 @@ using namespace std;
 
 // Implementare clasa Angajat
 Angajat::Angajat(const string& nume, const string& functie, int oraInceput, int oraSfarsit, double salariu)
-        : nume(nume), functie(functie), oraInceput(oraInceput), oraSfarsit(oraSfarsit), salariu(salariu) {}
+        : nume(nume), functie(functie), oraInceput(oraInceput), oraSfarsit(oraSfarsit), salariu(salariu) {} // Constructori
 
-void Angajat::afiseazaDetalii() const {
+void Angajat::afiseazaDetalii() const { // Polimorfism: Metoda virtuală care poate fi suprascrisă
     cout << "Nume: " << nume << ", Functie: " << functie
          << ", Tura: " << oraInceput << " - " << oraSfarsit
          << ", Salariu: " << salariu << endl;
 }
 
-double Angajat::getSalariu() const {
+double Angajat::getSalariu() const { // Încapsulare: Acces controlat la atributul salariu
     return salariu;
 }
 
-string Angajat::getNume() const {
+string Angajat::getNume() const { // Încapsulare
     return nume;
 }
 
-string Angajat::getFunctie() const {
+string Angajat::getFunctie() const { // Încapsulare
     return functie;
 }
 
-int Angajat::getOraInceput() const {
+int Angajat::getOraInceput() const { // Încapsulare
     return oraInceput;
 }
 
-int Angajat::getOraSfarsit() const {
+int Angajat::getOraSfarsit() const { // Încapsulare
     return oraSfarsit;
 }
 
 
 // Implementare clase derivate
 Barista::Barista(const string& nume, int oraInceput, int oraSfarsit, double salariu)
-        : Angajat(nume, "Barista", oraInceput, oraSfarsit, salariu) {}
+        : Angajat(nume, "Barista", oraInceput, oraSfarsit, salariu) {} // Constructori și Moștenire
 
-void Barista::afiseazaDetalii() const {
+void Barista::afiseazaDetalii() const { // Polimorfism: Suprascrierea metodei afiseazaDetalii
     cout << "[Barista] ";
     Angajat::afiseazaDetalii();
 }
 
 Manager::Manager(const string& nume, int oraInceput, int oraSfarsit, double salariu)
-        : Angajat(nume, "Manager", oraInceput, oraSfarsit, salariu) {}
+        : Angajat(nume, "Manager", oraInceput, oraSfarsit, salariu) {} // Constructori și Moștenire
 
-void Manager::afiseazaDetalii() const {
+void Manager::afiseazaDetalii() const { // Polimorfism
     cout << "[Manager] ";
     Angajat::afiseazaDetalii();
 }
 
 Ospatar::Ospatar(const string& nume, int oraInceput, int oraSfarsit, double salariu)
-        : Angajat(nume, "Ospatar", oraInceput, oraSfarsit, salariu) {}
+        : Angajat(nume, "Ospatar", oraInceput, oraSfarsit, salariu) {} // Constructori și Moștenire
 
-void Ospatar::afiseazaDetalii() const {
+void Ospatar::afiseazaDetalii() const { // Polimorfism
     cout << "[Ospătar] ";
     Angajat::afiseazaDetalii();
 }
 
 // Implementare GestionareAngajati
 void GestionareAngajati::adaugaAngajat(std::unique_ptr<Angajat> angajat, const string& numeFisier) {
-    // Verificăm dacă angajatul există deja (pe baza numelui)
+    // Design Pattern: Utilizarea smart pointers (RAII)
+    // Exceptions: Verificăm și gestionăm existența unui angajat
+
     bool angajatExistent = false;
     for (const auto& a : angajati) {
         if (a->getNume() == angajat->getNume()) {
@@ -72,21 +74,18 @@ void GestionareAngajati::adaugaAngajat(std::unique_ptr<Angajat> angajat, const s
         }
     }
 
-    // Dacă angajatul nu există, adăugăm angajatul nou și actualizăm fișierul
     if (!angajatExistent) {
-        angajati.push_back(move(angajat));
+        angajati.push_back(move(angajat)); // Design Pattern: Transfer de proprietate cu smart pointers
     } else {
-        // Dacă angajatul există, îl înlocuim cu cel nou
         for (auto& a : angajati) {
             if (a->getNume() == angajat->getNume()) {
-                a = move(angajat); // Înlocuim angajatul existent cu cel nou
+                a = move(angajat);
                 break;
             }
         }
     }
 
-    // Scriem din nou toți angajații în fișierul CSV
-    scrieInCSV(numeFisier);
+    scrieInCSV(numeFisier); // Abstracție: Scrierea într-un fișier CSV
 }
 
 void GestionareAngajati::stergeAngajat(const string& nume, const string& numeFisier) {
@@ -98,55 +97,51 @@ void GestionareAngajati::stergeAngajat(const string& nume, const string& numeFis
     if (it != angajati.end()) {
         angajati.erase(it, angajati.end());
         cout << "Angajatul \"" << nume << "\" a fost șters.\n";
-        scrieInCSV(numeFisier); // Actualizează fișierul CSV după ștergere
+        scrieInCSV(numeFisier); // Abstracție
     } else {
-        throw invalid_argument("Angajatul cu numele " + nume + " nu a fost gasit.");
+        throw invalid_argument("Angajatul cu numele " + nume + " nu a fost gasit."); // Exceptions
     }
 }
 
 void GestionareAngajati::afiseazaAngajati() const {
     cout << "Lista angajaților din orasul " << currentCity << ":\n";
     for (const auto& angajat : angajati) {
-        angajat->afiseazaDetalii();
+        angajat->afiseazaDetalii(); // Polimorfism: Apelare dinamică a metodei afiseazaDetalii
     }
 }
 
 void GestionareAngajati::citesteDinCSV(const string& numeFisier) {
     ifstream fisier(numeFisier);
     if (!fisier.is_open()) {
-        throw runtime_error("Nu s-a putut deschide fisierul angajati: " + numeFisier);
+        throw runtime_error("Nu s-a putut deschide fisierul angajati: " + numeFisier); // Exceptions
     }
 
     string linie, nume, functie, oras;
     int oraInceput, oraSfarsit;
     double salariu;
 
-    // Ignorăm prima linie (header-ul)
-    getline(fisier, linie);
+    getline(fisier, linie); // Abstracție: Gestionarea fișierelor CSV
 
     while (getline(fisier, linie)) {
         istringstream stream(linie);
         getline(stream, nume, ',');
         getline(stream, functie, ',');
         stream >> oraInceput;
-        stream.ignore(1); // Ignorăm separatorul ','
+        stream.ignore(1);
         stream >> oraSfarsit;
-        stream.ignore(1); // Ignorăm separatorul ','
+        stream.ignore(1);
         stream >> salariu;
-        stream.ignore(1); // Ignorăm separatorul ',' înainte de oraș
+        stream.ignore(1);
 
-        // Citim orașul
-        getline(stream, oras); // Orașul ar trebui să fie ultima coloană
-
-        // Verificăm și schimbăm orașul
+        getline(stream, oras);
         schimbaOras(oras);
 
         if (functie == "Barista") {
-            adaugaAngajat(make_unique<Barista>(nume, oraInceput, oraSfarsit, salariu), numeFisier);
+            adaugaAngajat(make_unique<Barista>(nume, oraInceput, oraSfarsit, salariu), numeFisier); // Design Pattern
         } else if (functie == "Manager") {
-            adaugaAngajat(make_unique<Manager>(nume, oraInceput, oraSfarsit, salariu), numeFisier);
+            adaugaAngajat(make_unique<Manager>(nume, oraInceput, oraSfarsit, salariu), numeFisier); // Design Pattern
         } else if (functie == "Ospatar") {
-            adaugaAngajat(make_unique<Ospatar>(nume, oraInceput, oraSfarsit, salariu), numeFisier);
+            adaugaAngajat(make_unique<Ospatar>(nume, oraInceput, oraSfarsit, salariu), numeFisier); // Design Pattern
         } else {
             cerr << "Funcție necunoscută pentru angajatul " << nume << endl;
         }
@@ -156,7 +151,6 @@ void GestionareAngajati::citesteDinCSV(const string& numeFisier) {
     cout << "Angajații au fost încărcați din fișierul " << numeFisier << endl;
 }
 
-// Funcția care scrie în fișierul CSV
 void GestionareAngajati::scrieInCSV(const string& numeFisier) {
     ofstream fisier(numeFisier);
     if (!fisier.is_open()) {
@@ -164,7 +158,7 @@ void GestionareAngajati::scrieInCSV(const string& numeFisier) {
         return;
     }
 
-    fisier << "Nume,Functie,OraInceput,OraSfarsit,Salariu\n"; // Header-ul fișierului CSV
+    fisier << "Nume,Functie,OraInceput,OraSfarsit,Salariu\n";
 
     for (const auto& angajat : angajati) {
         fisier << angajat->getNume() << ","
@@ -180,8 +174,8 @@ void GestionareAngajati::scrieInCSV(const string& numeFisier) {
 
 void GestionareAngajati::schimbaOras(const string& oras) {
     if (oras != currentCity) {
-        currentCity = oras;
-        angajati.clear(); // Golește lista de angajați
+        currentCity = oras; // Încapsulare: Atribut protejat
+        angajati.clear();
         cout << "Orașul a fost schimbat în: " << oras << endl;
     }
 }
@@ -190,7 +184,7 @@ double GestionareAngajati::calculeazaTotalSalarii() const {
     double totalSalarii = 0;
 
     for (const auto& angajat : angajati) {
-        totalSalarii += angajat->getSalariu();
+        totalSalarii += angajat->getSalariu(); // Încapsulare: Acces controlat la salariu
     }
 
     return totalSalarii;

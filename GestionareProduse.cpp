@@ -39,7 +39,7 @@ void GestionareProduse::citesteDinCSV(const string& numeFisier) {
     int stoc;
     double costAchizitie, costVanzare;
 
-    // Ignorăm header-ul
+    // Ignoram header-ul
     getline(fisier, linie);
 
     while (getline(fisier, linie)) {
@@ -55,13 +55,13 @@ void GestionareProduse::citesteDinCSV(const string& numeFisier) {
     }
 
     fisier.close();
-    cout << "Produsele au fost încărcate din fișierul " << numeFisier << endl;
+    cout << "Produsele au fost incarcate din fisierul " << numeFisier << endl;
 }
 
 void GestionareProduse::scrieInCSV(const string& numeFisier) const {
     ofstream fisier(numeFisier);
     if (!fisier.is_open()) {
-        cerr << "Nu s-a putut deschide fișierul " << numeFisier << endl;
+        cerr << "Nu s-a putut deschide fisierul " << numeFisier << endl;
         return;
     }
 
@@ -74,11 +74,11 @@ void GestionareProduse::scrieInCSV(const string& numeFisier) const {
     }
 
     fisier.close();
-    cout << "Fișierul CSV a fost actualizat.\n";
+    cout << "Fisierul CSV a fost actualizat.\n";
 }
 
 void GestionareProduse::adaugaProdus(const Produs& produs, const string& numeFisier) {
-    // Verificăm dacă produsul există deja
+    // Verificam daca produsul exista deja
     bool produsExistente = false;
     for (const auto& p : produse) {
         if (p.getNume() == produs.getNume()) {
@@ -87,20 +87,20 @@ void GestionareProduse::adaugaProdus(const Produs& produs, const string& numeFis
         }
     }
 
-    // Dacă produsul nu există, adăugăm produsul nou și actualizăm fișierul
+    // Daca produsul nu exista, adaugam produsul nou si actualizam fisierul
     if (!produsExistente) {
         produse.push_back(produs);
     } else {
-        // Dacă produsul există, îl înlocuim cu produsul introdus
+        // Daca produsul exista, il inlocuim cu produsul introdus
         for (auto& p : produse) {
             if (p.getNume() == produs.getNume()) {
-                p = produs; // Înlocuim produsul existent cu cel nou
+                p = produs; // Inlocuim produsul existent cu cel nou
                 break;
             }
         }
     }
 
-    // Scriem din nou toate produsele în fișierul CSV
+    // Scriem din nou toate produsele in fisierul CSV
     scrieInCSV(numeFisier);
 }
 
@@ -113,7 +113,7 @@ void GestionareProduse::eliminaProdus(const string& nume, const string& numeFisi
     if (it != produse.end()) {
         produse.erase(it, produse.end());
         scrieInCSV(numeFisier);
-        cout << "Produsul \"" << nume << "\" a fost șters.\n";
+        cout << "Produsul \"" << nume << "\" a fost sters.\n";
     } else {
         throw invalid_argument("Produsul cu numele " + nume + " nu a fost gasit.");
     }
@@ -128,4 +128,3 @@ void GestionareProduse::afiseazaProduse() const {
 void GestionareProduse::golesteProduse() {
     produse.clear();
 }
-

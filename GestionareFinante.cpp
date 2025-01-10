@@ -1,29 +1,28 @@
 #include "GestionareFinante.h"
 
 string obtineDataSiOraCurenta() {
-    std::time_t timpCurent = std::time(nullptr);
-    std::tm* timpLocal = std::localtime(&timpCurent);
+    std::time_t timpCurent = std::time(nullptr);  // Obținem timpul curent
+    std::tm* timpLocal = std::localtime(&timpCurent);  // Convertim timpul în format local
 
-    std::ostringstream buffer;
-    buffer << std::put_time(timpLocal, "%Y-%m-%d %H:%M:%S");
-    return buffer.str();
+    std::ostringstream buffer;  // Folosim un buffer pentru a formata data
+    buffer << std::put_time(timpLocal, "%Y-%m-%d %H:%M:%S");  // Formatare data și oră
+    return buffer.str();  // Returnăm data și ora curente ca șir de caractere
 }
 
-
 void GestionareFinante::citesteComenziDinCSV(const std::string& numeFisier) {
-    std::ifstream fisier(numeFisier);
+    std::ifstream fisier(numeFisier);  // Deschidem fișierul pentru citire
     if (!fisier.is_open()) {
-        throw runtime_error("Nu s-a putut deschide fisierul comenzi: " + numeFisier);
+        throw runtime_error("Nu s-a putut deschide fisierul comenzi: " + numeFisier);  // Aruncăm excepție dacă fișierul nu se poate deschide
     }
 
     std::string linie;
-    std::getline(fisier, linie); // Ignorăm header-ul
+    std::getline(fisier, linie);  // Ignorăm header-ul
 
     Comanda comanda;
     while (std::getline(fisier, linie)) {
-        std::istringstream stream(linie);
+        std::istringstream stream(linie);  // Citim fiecare linie
 
-        // Citim datele din linie
+        // Citim datele din linie și le stocăm în structura Comanda
         stream >> comanda.espresso;
         stream.ignore(1, ',');
         stream >> comanda.latte;
@@ -38,11 +37,11 @@ void GestionareFinante::citesteComenziDinCSV(const std::string& numeFisier) {
         stream.ignore(1, ',');
         stream >> comanda.fidelitate;
 
-        // Adăugăm comanda citită la vectorul de comenzi
+        // Adăugăm comanda citită în vectorul de comenzi
         comenzi.push_back(comanda);
     }
 
-    fisier.close();
+    fisier.close();  // Închidem fișierul
     std::cout << "Comenzile au fost încărcate din fișierul " << numeFisier << std::endl;
 }
 
@@ -57,7 +56,7 @@ double GestionareFinante::calculeazaPretComanda(const Comanda& comanda, const Ge
 
     // Parcurgem produsele și calculăm prețul total
     for (size_t i = 0; i < numeProduse.size(); ++i) {
-        // Obținem numărul de produse comandate pentru fiecare produs
+        // Obținem numărul de produse comandate pentru fiecare tip de produs
         int numarProduseComandate = 0;
         switch (i) {
             case 0: numarProduseComandate = comanda.espresso; break;
@@ -76,47 +75,42 @@ double GestionareFinante::calculeazaPretComanda(const Comanda& comanda, const Ge
             }
         }
     }
-    pretTotal = aplicaReducere(pretTotal,comanda.fidelitate);
+
+    // Aplicăm reducerea de fidelitate dacă este cazul
+    pretTotal = aplicaReducere(pretTotal, comanda.fidelitate);
     return pretTotal;
 }
 
 double GestionareFinante::aplicaReducere(double pretTotal, bool fidelitate) const {
     if (fidelitate) {
-        return pretTotal * 0.90;  // Aplicăm reducerea de 10% pentru clienții fideli
+        return pretTotal * 0.90;  // Reducere de 10% pentru clienții fideli
     }
     return pretTotal;
 }
 
-
 void GestionareFinante::citesteEvenimenteDinCSV(const string& numeFisier) {
-    ifstream fisier(numeFisier);
+    ifstream fisier(numeFisier);  // Deschidem fișierul pentru citire
     if (!fisier.is_open()) {
-        throw runtime_error("Nu s-a putut deschide fisierul evenimente: " + numeFisier);
+        throw runtime_error("Nu s-a putut deschide fisierul evenimente: " + numeFisier);  // Aruncăm excepție dacă fișierul nu se poate deschide
     }
 
     string linie, tipEveniment;
     double pret;
 
-    // Ignorăm header-ul
+    // Ignorăm header-ul fișierului
     getline(fisier, linie);
 
     while (getline(fisier, linie)) {
-        istringstream stream(linie);
+        istringstream stream(linie);  // Citim fiecare linie
         getline(stream, tipEveniment, ',');
         stream >> pret;
 
+        // Adăugăm evenimentul citit în vectorul de evenimente
         evenimente.push_back(Eveniment{tipEveniment, pret});
     }
 
-    fisier.close();
+    fisier.close();  // Închidem fișierul
     cout << "Evenimentele au fost încărcate din fișierul " << numeFisier << endl;
-}
-
-// Afișarea detaliilor fiecărui eveniment
-void GestionareFinante::afiseazaEvenimente() const {
-    for (const auto& eveniment : evenimente) {
-        cout << "Eveniment: " << eveniment.tipEveniment << ", Pret: " << eveniment.pret << " lei" << endl;
-    }
 }
 
 // Calculul costului total al evenimentelor
@@ -129,7 +123,7 @@ double GestionareFinante::calculeazaCostEvenimente() const {
         cnt++;
     }
 
-    // Inițializare generator de numere aleatoare (o singură dată în program)
+    // Inițializare generator de numere aleatoare pentru determinarea unui cost mediu
     static bool initializat = false;
     if (!initializat) {
         srand(static_cast<unsigned>(time(0)));
@@ -149,7 +143,7 @@ double GestionareFinante::calculeazaVenituriTotale(const GestionareProduse& gest
     double venituriTotale = 0;
 
     for (const auto& comanda : comenzi) {
-        venituriTotale += calculeazaPretComanda(comanda, gestionareProduse);
+        venituriTotale += calculeazaPretComanda(comanda, gestionareProduse);  // Calculăm veniturile din comenzi
     }
 
     return venituriTotale;
@@ -163,33 +157,33 @@ double GestionareFinante::calculeazaCostProduse(const GestionareProduse& gestion
 
     // Calculăm costul total al produselor
     for (const auto& produs : produse) {
-        costTotal += produs.getCostAchizitie() * produs.getStoc();
+        costTotal += produs.getCostAchizitie() * produs.getStoc();  // Costul de achiziție al fiecărui produs
     }
-    costTotal += calculeazaCostEvenimente();
+    costTotal += calculeazaCostEvenimente();  // Adăugăm costul evenimentelor
     return costTotal;
 }
 
 void GestionareFinante::genereazaRaportCSV(const string& numeFisier, const GestionareProduse& gestionareProduse, const GestionareAngajati& gestionareAngajati) const {
-    // Deschidem fișierul în modul append (pentru a adăuga noi linii)
+    // Deschidem fișierul pentru a adăuga un nou raport
     ofstream fisier(numeFisier, ios::app);
     if (!fisier.is_open()) {
         cerr << "Nu s-a putut deschide fișierul " << numeFisier << endl;
         return;
     }
 
-    double salarii = gestionareAngajati.calculeazaTotalSalarii();
-    double venituriTotale = calculeazaVenituriTotale(gestionareProduse);
-    double costProduse = calculeazaCostProduse(gestionareProduse);
-    double costEvenimente = calculeazaCostEvenimente();
-    double costuriTotale = costProduse + costEvenimente + salarii;
-    double profit = venituriTotale - costuriTotale;
+    double salarii = gestionareAngajati.calculeazaTotalSalarii();  // Calculăm salariile
+    double venituriTotale = calculeazaVenituriTotale(gestionareProduse);  // Calculăm veniturile totale
+    double costProduse = calculeazaCostProduse(gestionareProduse);  // Calculăm costurile produselor
+    double costEvenimente = calculeazaCostEvenimente();  // Calculăm costurile evenimentelor
+    double costuriTotale = costProduse + costEvenimente + salarii;  // Totalul costurilor
+    double profit = venituriTotale - costuriTotale;  // Profitul
 
     // Obținem data și ora curente
     string dataOraCurenta = obtineDataSiOraCurenta();
 
-    // Scriem o nouă linie în fișier
+    // Scriem linia raportului în fișier
     fisier << venituriTotale << "," << costuriTotale << "," << salarii << "," << profit << "," << dataOraCurenta << "\n";
 
-    fisier.close();
+    fisier.close();  // Închidem fișierul
     cout << "Raportul a fost generat și adăugat în fișierul " << numeFisier << endl;
 }

@@ -7,9 +7,10 @@
 
 using namespace std;
 
+// Incapsulare: functiile ascund detaliile de implementare ale meniurilor pentru gestionarea evenimentelor.
 void afiseazaMeniuGestionareEvenimente() {
     cout << "\nMeniu Gestionare Evenimente\n";
-    cout << "1. Adauga/Modifica eveniment\n";
+    cout << "1. Adauga/Modifica eveniment (Introduce numele pentru a modifica)\n";
     cout << "2. Sterge eveniment\n";
     cout << "3. Afiseaza evenimente\n";
     cout << "4. Iesire\n";
@@ -54,6 +55,7 @@ void afiseazaMeniuGestionareFinante() {
 
 int main() {
     try {
+        // Instanțierea claselor folosește Constructori (GestionareAngajati, GestionareProduse etc.)
         int optiuneCafenea;
         GestionareAngajati gestionareAngajati;
         GestionareProduse gestionareProduse;
@@ -66,7 +68,7 @@ int main() {
         // Alegerea limbii
         cout << "Selecteaza limba:\n";
         cout << "1. Romana\n";
-        cout << "2. Engleza\n";
+        cout << "2. English\n";
         cout << "Alege o optiune: ";
         cin >> optiuneLimba;
         cin.ignore();
@@ -76,17 +78,17 @@ int main() {
         } else if (optiuneLimba == 2) {
             limba = "en";
         } else {
+            // Exceptions: Gestionare a erorilor pentru o opțiune invalidă
             throw invalid_argument("Optiune invalida pentru limba.");
         }
 
-        // Cream obiectul pentru gestionarea CSV
+        // Constructori: Obiectul gestionareCSV este creat cu parametrul de limbă
         GestionareCSV gestionareCSV(limba);
 
-        // Lista oraselor
+        // Polimorfism: metode precum schimbaToateHeaderelePentruOrase folosesc o implementare abstractă ascunsă utilizatorului.
         vector<string> orase = {"Bucuresti", "Cluj", "Timisoara", "Iasi", "Brasov"};
-
-        // Schimbam header-ele pentru toate fisierele din toate orasele
         gestionareCSV.schimbaToateHeaderelePentruOrase(orase);
+
         if (optiuneLimba == 1) {
             cout << "Toate fisierele CSV au fost actualizate.\n";
         } else if (optiuneLimba == 2) {
@@ -122,7 +124,7 @@ int main() {
                     continue;
             }
 
-            // Setăm orașul pentru gestionare
+            // Incapsulare: metodele din clase ascund logica specifică.
             gestionareAngajati.schimbaOras(locatie);
             gestionareProduse.golesteProduse();
             gestionareEvenimente.golesteEvenimente();

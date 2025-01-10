@@ -2,7 +2,7 @@
 #define GESTIONARE_PRODUSE_H
 
 #include <string>
-#include <vector>
+#include <vector> // Utilizare template: vector este un template
 #include <unordered_map>
 #include <iostream>
 
@@ -28,7 +28,7 @@ public:
 
 class GestionareProduse {
 private:
-    vector<Produs> produse;
+    vector<Produs> produse; // Utilizare template: vector de obiecte de tip Produs
 
 public:
     void citesteDinCSV(const string& numeFisier);
@@ -36,12 +36,12 @@ public:
 
     void adaugaProdus(const Produs& produs, const string& numeFisier);
     void eliminaProdus(const string& nume, const string& numeFisier);
-    const std::vector<Produs>& getProduse() const {
+    const std::vector<Produs>& getProduse() const { // Utilizare template: returnam o referinta catre vector
         return produse;
     };
 
     void afiseazaProduse() const;
-    void golesteProduse(); // Golește lista pentru schimbarea orașului
+    void golesteProduse(); // Goleste lista pentru schimbarea orasului
 };
 
 #endif
